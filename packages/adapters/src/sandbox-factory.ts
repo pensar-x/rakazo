@@ -10,6 +10,7 @@ import type { KubernetesSandboxOptions } from "./kubernetes-sandbox.js";
 import { KubernetesSandboxProvider } from "./kubernetes-sandbox.js";
 import { NoneSandboxProvider } from "./none-sandbox.js";
 import { NovitaSandboxProvider } from "./novita-sandbox.js";
+import { PreallocatedSandboxProvider } from "./preallocated-sandbox.js";
 import { RailwaySandboxProvider } from "./railway-sandbox.js";
 
 export interface SandboxProviderOptions {
@@ -99,6 +100,10 @@ export async function createSandboxProvider(
   }
   const sandboxKind = parsed.data;
   switch (sandboxKind) {
+    case "preallocated":
+      if (!opts.supervisorUrl || !opts.supervisorToken)
+        throw new Error("Preallocated computers require a supervisor URL and token");
+      return new PreallocatedSandboxProvider(opts.supervisorUrl, opts.supervisorToken);
     case "none":
       return new NoneSandboxProvider();
     case "e2b":

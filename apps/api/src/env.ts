@@ -278,7 +278,9 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
     voiceSummaryMinChars: voiceSummaryMinCharsFromEnv(source.VOICE_SUMMARY_MIN_CHARS),
     sandboxSupervisorUrl: source.SANDBOX_SUPERVISOR_URL ?? "http://127.0.0.1:7091",
     sandboxSupervisorToken:
-      sandboxProvider === "docker" ? resolveSupervisorToken(source) : undefined,
+      sandboxProvider === "docker" || sandboxProvider === "preallocated"
+        ? resolveSupervisorToken(source)
+        : undefined,
     screenProxySecret: resolveScreenProxySecret(source),
     sandboxProvider,
     cloudAgentProvider,
